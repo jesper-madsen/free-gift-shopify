@@ -3,45 +3,44 @@
         var free_variant_id = 1234568978978; // rettes til gratis produkts variant id (IKKE product id)
 
         $.getJSON( '/cart.js', function( data ) {
-        var was_found = false;
-        
-        $.each(data.items, function( index, value ) {
-            console.log();
-    
-            if(data.items[index].variant_id == free_variant_id)
-            {
-                was_found = true;
-    
-                if(data.items[index].quantity != 1)
+            var was_found = false;
+
+            $.each(data.items, function( index, value ) {
+
+                if(data.items[index].variant_id == free_variant_id)
                 {
-                        var lineid = data.items[index].id;
-                        var reqdata = { updates: {} };
-                        reqdata.updates[lineid] = 1;
-                        
-                        $.post('/cart/update.js', reqdata, function(response) {
-                            window.location.reload();
-                        }, 'json');
-                }
-            } 
-        });
-    
-        if(was_found == false)
-        {
-            $.post(
-                '/cart/add.js', 
-                { 
-                    'quantity': 1, 
-                    'id': free_variant_id, 
-                    'properties': { 
-                        'Gratis Gave': 'Så længe lager haves' 
+                    was_found = true;
+
+                    if(data.items[index].quantity != 1)
+                    {
+                            var lineid = data.items[index].id;
+                            var reqdata = { updates: {} };
+                            reqdata.updates[lineid] = 1;
+
+                            $.post('/cart/update.js', reqdata, function(response) {
+                                window.location.reload();
+                            }, 'json');
                     }
-                }, 
-                function(response) {
-                    window.location.reload();
-                },
-                'json'
-            );
-        }
+                } 
+            });
+
+            if(was_found == false)
+            {
+                $.post(
+                    '/cart/add.js', 
+                    { 
+                        'quantity': 1, 
+                        'id': free_variant_id, 
+                        'properties': { 
+                            'Gratis Gave': 'Så længe lager haves' 
+                        }
+                    }, 
+                    function(response) {
+                        window.location.reload();
+                    },
+                    'json'
+                );
+            }
         });
     });
 </script>
